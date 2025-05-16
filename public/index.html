@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Система уведомлений мероприятий</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Пользовательские стили -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico">
+</head>
+<body>
+    <div id="app">
+        <!-- Навигационное меню -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="#">Система Мероприятий</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#" id="nav-home">Главная</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="nav-analytics">Аналитика</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="nav-profile">Профиль</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item auth-not-logged-in">
+                            <a class="nav-link" href="#" id="nav-login">Войти</a>
+                        </li>
+                        <li class="nav-item auth-not-logged-in">
+                            <a class="nav-link" href="#" id="nav-register">Регистрация</a>
+                        </li>
+                        <li class="nav-item auth-logged-in d-none">
+                            <a class="nav-link" href="#" id="nav-logout">Выйти</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Контейнер для основного содержимого -->
+        <div class="container mt-4" id="main-container">
+            
+            <!-- Страница аутентификации -->
+            <div id="auth-container" class="auth-not-logged-in">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <ul class="nav nav-tabs card-header-tabs">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="login-tab" href="#">Вход</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="register-tab" href="#">Регистрация</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="card-body">
+                                <!-- Форма входа -->
+                                <form id="login-form">
+                                    <div class="mb-3">
+                                        <label for="login-email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="login-email" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="login-password" class="form-label">Пароль</label>
+                                        <input type="password" class="form-control" id="login-password" required>
+                                    </div>
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-primary">Войти</button>
+                                    </div>
+                                </form>
+                                
+                                <!-- Форма регистрации -->
+                                <form id="register-form" class="d-none">
+                                    <div class="mb-3">
+                                        <label for="register-name" class="form-label">Имя</label>
+                                        <input type="text" class="form-control" id="register-name" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="register-email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="register-email" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="register-password" class="form-label">Пароль</label>
+                                        <input type="password" class="form-control" id="register-password" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="register-password-confirm" class="form-label">Подтвердите пароль</label>
+                                        <input type="password" class="form-control" id="register-password-confirm" required>
+                                    </div>
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Основной контент (страница мероприятий) -->
+            <div id="events-container" class="auth-logged-in d-none">
+                <h2>Мои мероприятия</h2>
+                <div class="d-flex justify-content-end mb-3">
+                    <button class="btn btn-primary" id="create-event-btn">Создать мероприятие</button>
+                </div>
+                
+                <!-- Список мероприятий -->
+                <div class="row" id="events-list">
+                    <!-- События будут добавлены динамически через JavaScript -->
+                </div>
+                
+                <!-- Модальное окно для создания/редактирования мероприятия -->
+                <div class="modal fade" id="event-modal" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="event-modal-title">Новое мероприятие</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Вкладки -->
+                                <ul class="nav nav-tabs" id="eventTabs" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="event-info-tab" data-bs-toggle="tab" data-bs-target="#event-info" type="button" role="tab" aria-controls="event-info" aria-selected="true">Общая информация</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="event-participants-tab" data-bs-toggle="tab" data-bs-target="#event-participants" type="button" role="tab" aria-controls="event-participants" aria-selected="false">Участники</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="event-attendance-tab" data-bs-toggle="tab" data-bs-target="#event-attendance" type="button" role="tab" aria-controls="event-attendance" aria-selected="false">Отметка посещения</button>
+                                    </li>
+                                </ul>
+                                
+                                <!-- Содержимое вкладок -->
+                                <div class="tab-content mt-3" id="eventTabsContent">
+                                    <!-- Вкладка общей информации -->
+                                    <div class="tab-pane fade show active" id="event-info" role="tabpanel" aria-labelledby="event-info-tab">
+                                        <form id="event-form">
+                                            <input type="hidden" id="event-id">
+                                            <div class="mb-3">
+                                                <label for="event-name" class="form-label">Название</label>
+                                                <input type="text" class="form-control" id="event-name" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="event-date" class="form-label">Дата</label>
+                                                <input type="date" class="form-control" id="event-date" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="event-time" class="form-label">Время</label>
+                                                <input type="time" class="form-control" id="event-time" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="event-description" class="form-label">Описание</label>
+                                                <textarea class="form-control" id="event-description" rows="3"></textarea>
+                                            </div>
+                                            <div class="mb-3 form-check">
+                                                <input type="checkbox" class="form-check-input" id="event-notifications" checked>
+                                                <label class="form-check-label" for="event-notifications">Включить уведомления</label>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    
+                                    <!-- Вкладка участников -->
+                                    <div class="tab-pane fade" id="event-participants" role="tabpanel" aria-labelledby="event-participants-tab">
+                                        <div class="mb-3">
+                                            <h6>Приглашение участников</h6>
+                                            <div class="input-group">
+                                                <input type="email" class="form-control" id="invite-email" placeholder="Email участника">
+                                                <button class="btn btn-outline-primary" type="button" id="add-participant-btn">Пригласить</button>
+                                            </div>
+                                            <small class="form-text text-muted">Приглашение будет отправлено на указанный email</small>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <h6>Список участников</h6>
+                                            <div class="table-responsive">
+                                                <table class="table table-hover" id="participants-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Имя</th>
+                                                            <th>Email</th>
+                                                            <th>Статус</th>
+                                                            <th>Действия</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="participants-list">
+                                                        <!-- Список участников будет добавлен динамически -->
+                                                        <tr class="text-center text-muted">
+                                                            <td colspan="4">Нет приглашенных участников</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Вкладка отметки посещения -->
+                                    <div class="tab-pane fade" id="event-attendance" role="tabpanel" aria-labelledby="event-attendance-tab">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <h6>QR-код для отметки посещения</h6>
+                                                    <div id="qr-code-container" class="text-center p-3 border rounded">
+                                                        <div id="qr-code-image" class="my-3"></div>
+                                                        <div id="qr-code-url" class="small text-muted mb-2"></div>
+                                                        <button id="download-qr-btn" class="btn btn-sm btn-outline-primary mt-2">Скачать QR-код</button>
+                                                    </div>
+                                                    <small class="form-text text-muted">Распечатайте и покажите на входе для отметки участников</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <h6>Сканирование QR-кода</h6>
+                                                    <button id="start-scan-btn" class="btn btn-outline-primary mb-2">Начать сканирование</button>
+                                                    <div id="scanner-container" class="mt-2 d-none">
+                                                        <div class="position-relative">
+                                                            <video id="qr-video" class="border rounded w-100"></video>
+                                                            <div id="scan-region-highlight" class="position-absolute" style="border: 2px solid #0d6efd; display: none;"></div>
+                                                        </div>
+                                                        <div class="text-center mt-2">
+                                                            <button id="stop-scan-btn" class="btn btn-sm btn-outline-danger">Остановить</button>
+                                                        </div>
+                                                        <div id="scan-result" class="mt-2 small"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <h6>Ручная отметка посещения</h6>
+                                                    <div class="input-group">
+                                                        <input type="email" class="form-control" id="manual-attendance-email" placeholder="Email участника">
+                                                        <button class="btn btn-outline-success" type="button" id="mark-attendance-btn">Отметить</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mt-3">
+                                            <h6>Статистика посещения</h6>
+                                            <div class="row">
+                                                <div class="col-4 text-center">
+                                                    <div class="border rounded p-2">
+                                                        <h3 id="participants-total">0</h3>
+                                                        <small>Всего приглашено</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4 text-center">
+                                                    <div class="border rounded p-2 bg-success bg-opacity-10">
+                                                        <h3 id="participants-attended">0</h3>
+                                                        <small>Посетили</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4 text-center">
+                                                    <div class="border rounded p-2 bg-danger bg-opacity-10">
+                                                        <h3 id="participants-missed">0</h3>
+                                                        <small>Не посетили</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mt-3">
+                                            <div id="attendance-log" class="border rounded p-2 bg-light" style="max-height: 200px; overflow-y: auto;">
+                                                <h6>Журнал отметок посещения</h6>
+                                                <ul class="list-group list-group-flush" id="attendance-log-list">
+                                                    <!-- Записи будут добавляться динамически -->
+                                                    <li class="list-group-item bg-transparent text-muted small">Пока нет отметок о посещении</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                                <button type="button" class="btn btn-primary" id="save-event-btn">Сохранить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Страница профиля -->
+            <div id="profile-container" class="auth-logged-in d-none">
+                <h2>Профиль пользователя</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" id="profile-name">Имя пользователя</h5>
+                        <p class="card-text" id="profile-email">Email пользователя</p>
+                        
+                        <h6 class="mt-4">Настройки уведомлений</h6>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="notification-email-toggle" checked>
+                            <label class="form-check-label" for="notification-email-toggle">Email уведомления</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="notification-push-toggle" checked>
+                            <label class="form-check-label" for="notification-push-toggle">Браузерные уведомления</label>
+                        </div>
+                        
+                        <div class="mt-3">
+                            <button class="btn btn-sm btn-outline-primary" id="request-notification-permission-btn">
+                                Запросить разрешение на уведомления
+                            </button>
+                            <div class="small text-muted mt-1" id="notification-permission-status">
+                                Статус разрешения: проверка...
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-primary mt-3" id="save-profile-btn">Сохранить настройки</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Страница аналитики -->
+            <div id="analytics-container" class="auth-logged-in d-none">
+                <h2>Аналитика мероприятий</h2>
+                
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Мероприятия</h5>
+                                <h2 id="stats-total-events">0</h2>
+                                <p>всего создано</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Участники</h5>
+                                <h2 id="stats-total-participants">0</h2>
+                                <p>всего участников</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Посещаемость</h5>
+                                <h2 id="stats-attendance-rate">0%</h2>
+                                <p>средняя посещаемость</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Мероприятия по месяцам</h5>
+                                <canvas id="events-by-month-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Посещаемость мероприятий</h5>
+                                <canvas id="attendance-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <!-- Тосты для уведомлений -->
+        <div class="position-fixed bottom-0 end-0 p-3">
+            <div id="toast-container">
+                <!-- Тосты будут добавлены динамически -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- QR-код библиотеки -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Пользовательские скрипты -->
+    <script src="scripts/config.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/events.js"></script>
+    <script src="scripts/participants.js"></script>
+    <script src="scripts/notifications.js"></script>
+    <script src="scripts/analytics.js"></script>
+    <script src="scripts/app.js"></script>
+</body>
+</html>

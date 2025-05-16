@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отметка посещения мероприятия</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Пользовательские стили -->
+    <link rel="stylesheet" href="/styles/main.css">
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0" id="event-title">Отметка посещения мероприятия</h4>
+                    </div>
+                    <div class="card-body">
+                        <div id="event-info" class="mb-4">
+                            <h5 id="event-name">Загрузка информации о мероприятии...</h5>
+                            <p class="text-muted mb-0" id="event-date"></p>
+                            <p class="mb-3" id="event-description"></p>
+                        </div>
+                        
+                        <div id="attendance-form-container">
+                            <h5 class="mb-3">Отметьте ваше присутствие</h5>
+                            <form id="attendance-form">
+                                <div class="mb-3">
+                                    <label for="attendee-name" class="form-label">Ваше имя</label>
+                                    <input type="text" class="form-control" id="attendee-name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="attendee-email" class="form-label">Ваш Email</label>
+                                    <input type="email" class="form-control" id="attendee-email" required>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary" id="mark-attendance-btn">Отметить присутствие</button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <div id="success-message" class="text-center mt-4 d-none">
+                            <div class="alert alert-success">
+                                <h5>Спасибо!</h5>
+                                <p>Ваше присутствие успешно отмечено.</p>
+                            </div>
+                        </div>
+                        
+                        <div id="error-message" class="text-center mt-4 d-none">
+                            <div class="alert alert-danger">
+                                <h5>Ошибка</h5>
+                                <p id="error-text">Произошла ошибка при отметке посещения.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-center">
+                        <p class="mb-0 small">Система учета посещаемости мероприятий</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Пользовательские скрипты -->
+    <script src="/scripts/config.js"></script>
+    <script src="/scripts/attend.js"></script>
+</body>
+</html>
