@@ -1,1 +1,0 @@
-# nachinov-alpine-monkey

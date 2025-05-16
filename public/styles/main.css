@@ -1,0 +1,128 @@
+/* Основные стили для приложения */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+/* Стили для карточек мероприятий */
+.event-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 20px;
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.event-card .card-title {
+    font-weight: 500;
+}
+
+.event-date {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.event-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Стили для статусов уведомлений */
+.notification-status {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.notification-status .icon {
+    margin-right: 5px;
+    font-size: 1.2rem;
+}
+
+.notification-on {
+    color: #198754;
+}
+
+.notification-off {
+    color: #dc3545;
+}
+
+/* Стили для страницы аналитики */
+.analytics-card {
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.analytics-card h2 {
+    font-size: 3rem;
+    font-weight: 700;
+}
+
+.chart-container {
+    position: relative;
+    height: 300px;
+    margin-bottom: 30px;
+}
+
+/* Стили для панели навигации */
+.navbar-brand {
+    font-weight: 600;
+}
+
+/* Стили для toast-уведомлений */
+.toast {
+    position: relative;
+    opacity: 1 !important;
+}
+
+/* Стили для форм */
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Стили для кнопок */
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+
+/* Утилиты отображения */
+.d-none {
+    display: none !important;
+}
+
+/* Стили для страницы профиля */
+.profile-section {
+    margin-bottom: 30px;
+}
+
+.form-switch {
+    margin-bottom: 10px;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    .analytics-card h2 {
+        font-size: 2rem;
+    }
+    
+    .chart-container {
+        height: 250px;
+    }
+}
